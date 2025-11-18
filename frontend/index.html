@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask App Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Flask App Dashboard</h1>
+            <p class="subtitle">Мониторинг и управление Flask API</p>
+        </header>
+
+        <div class="status-bar">
+            <div class="status-item" id="health-status">
+                <span class="status-label">Статус:</span>
+                <span class="status-value" id="health-value">Проверка...</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Версия:</span>
+                <span class="status-value" id="version-value">-</span>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Информация о приложении -->
+            <div class="card">
+                <h2>📋 Информация о приложении</h2>
+                <div class="card-content" id="info-content">
+                    <p class="loading">Загрузка...</p>
+                </div>
+                <button class="btn" onclick="loadInfo()">Обновить</button>
+            </div>
+
+            <!-- Health Check -->
+            <div class="card">
+                <h2>💚 Health Check</h2>
+                <div class="card-content" id="health-content">
+                    <p class="loading">Загрузка...</p>
+                </div>
+                <button class="btn" onclick="loadHealth()">Обновить</button>
+            </div>
+
+            <!-- Калькулятор -->
+            <div class="card">
+                <h2>🔢 Калькулятор</h2>
+                <div class="card-content">
+                    <div class="calc-form">
+                        <div class="input-group">
+                            <label for="num1">Первое число:</label>
+                            <input type="number" id="num1" value="10" class="input">
+                        </div>
+                        <div class="input-group">
+                            <label for="num2">Второе число:</label>
+                            <input type="number" id="num2" value="5" class="input">
+                        </div>
+                        <button class="btn btn-primary" onclick="calculate()">Вычислить</button>
+                    </div>
+                    <div id="calc-result" class="calc-result"></div>
+                </div>
+            </div>
+
+            <!-- Все эндпоинты -->
+            <div class="card">
+                <h2>🔗 Доступные эндпоинты</h2>
+                <div class="card-content" id="endpoints-content">
+                    <p class="loading">Загрузка...</p>
+                </div>
+                <button class="btn" onclick="loadEndpoints()">Обновить</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Flask Simple App - Dashboard</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
