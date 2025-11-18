@@ -1,0 +1,42 @@
+# Multi-stage build для объединения Frontend и Backend в один образ
+
+# Stage 1: Build Frontend
+FROM nginx:alpine AS frontend-builder
+COPY frontend/ /usr/share/nginx/html/
+
+# Stage 2: Final image with Flask Backend + Nginx Frontend
+FROM python:3.10-slim
+
+# Устанавливаем Nginx и Supervisor
+RUN apt-get update && apt-get install -y nginx supervisor && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем и устанавливаем зависимости Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем Flask приложение
+COPY app.py .
+
+# Копируем фронтенд из первого stage
+COPY --from=frontend-builder /usr/share/nginx/html /usr/share/nginx/html
+
+# Копируем конфигурацию Nginx (обновленную для работы в одном контейнере)
+COPY nginx-combined.conf /etc/nginx/conf.d/default.conf
+
+# Создаем конфигурацию Supervisor для управления обоими процессами
+RUN echo '[supervisord]\nnodaemon=true\n\n[program:flask]\ncommand=python app.py\ndirectory=/app\nautostart=true\nautorestart=true\nstdout_logfile=/var/log/flask.log\nstderr_logfile=/var/log/flask_error.log\n\n[program:nginx]\ncommand=nginx -g "daemon off;"\nautostart=true\nautorestart=true\nstdout_logfile=/var/log/nginx.log\nstderr_logfile=/var/log/nginx_error.log\n' > /etc/supervisor/conf.d/supervisord.conf
+
+# Открываем порты
+EXPOSE 80 5001
+
+# Устанавливаем переменные окружения
+ENV FLASK_APP=app.py
+ENV PORT=5001
+ENV FLASK_DEBUG=False
+
+# Запускаем оба сервиса через Supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
