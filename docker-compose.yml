@@ -1,33 +1,16 @@
+# Основной docker-compose.yml - использует объединенный образ из Docker Hub
+# Для локальной сборки используйте docker-compose.build.yml
+
 services:
-  flask-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: my-flask-app
+  flask-combined:
+    image: elena1204/flask-combined:latest
+    container_name: flask-combined-app
     ports:
-      - "5001:5001"
+      - "3000:80"   # Frontend (Nginx)
+      - "5001:5001" # Backend (Flask API)
     environment:
       - FLASK_APP=app.py
       - PORT=5001
       - FLASK_DEBUG=False
     restart: unless-stopped
-    networks:
-      - flask-network
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: flask-frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      - flask-app
-    restart: unless-stopped
-    networks:
-      - flask-network
-
-networks:
-  flask-network:
-    driver: bridge
 

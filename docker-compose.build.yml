@@ -1,0 +1,36 @@
+# Docker Compose для локальной сборки отдельных образов
+# Используйте: docker compose -f docker-compose.build.yml up -d
+
+services:
+  flask-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my-flask-app
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_APP=app.py
+      - PORT=5001
+      - FLASK_DEBUG=False
+    restart: unless-stopped
+    networks:
+      - flask-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: flask-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - flask-app
+    restart: unless-stopped
+    networks:
+      - flask-network
+
+networks:
+  flask-network:
+    driver: bridge
+
