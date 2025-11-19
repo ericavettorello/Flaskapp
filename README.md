@@ -97,8 +97,8 @@ FLASK app/
 ├── requirements.txt          # Зависимости Python проекта
 ├── Dockerfile               # Конфигурация Docker образа для Flask
 ├── Dockerfile.combined      # Объединенный Dockerfile (Frontend + Backend)
-├── docker-compose.yml       # Конфигурация Docker Compose (Backend + Frontend)
-├── docker-compose.combined.yml # Конфигурация для объединенного образа
+├── docker-compose.yml       # Основной Docker Compose (использует объединенный образ)
+├── docker-compose.build.yml # Docker Compose для локальной сборки отдельных образов
 ├── nginx-combined.conf      # Конфигурация Nginx для объединенного образа
 ├── .dockerignore            # Файлы, исключаемые из Docker образа
 │
